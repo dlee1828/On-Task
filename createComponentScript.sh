@@ -12,18 +12,23 @@ fi
 # Make component files
 name=$1
 cd "./src/components"
-touch "$name.js"
-# touch "$name.css" 
+touch "$name.tsx"
 
-# Write boilerplate code to js file
+# Write boilerplate code to ts file
 echo "import React from 'react';
-import './$name.css';
+import { Box } from '@chakra-ui/react';
 
-function $1(props) {
+interface Props {
+	
+}
+
+function $1(props: Props) {
 	return (
-		<Box></Box>
+		<Box>
+
+		</Box>
 	)
 }
 
-export default $1;" >> "$1.js"
+export default $1;" >> "$1.tsx"
 

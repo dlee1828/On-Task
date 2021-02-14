@@ -28,6 +28,8 @@ function TaskOngoing(props: Props) {
 	let [timeUpBool, setTimeUpBool] = useState(false);
 
 	function updateTimeLeft() {
+		document.title = timeUpBool ? "Time Up" : utils.formatTimeLeft(timeLeftState) + " left";
+
 		if (timeUpBool) return;
 
 		timeLeft = utils.getTimeLeftUntil(timeDeadline);
@@ -36,7 +38,6 @@ function TaskOngoing(props: Props) {
 
 		setTimeLeftState(timeLeft);
 		setProgressPercent(utils.getProgressPercent(startingTime, timeDeadline))
-
 	}
 
 	function handleTimeUp() {

@@ -3,7 +3,7 @@ import { Box, Button, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigg
 import * as utils from "./Utils";
 
 interface Props {
-
+	onNewTask(task: string, timeDeadline: utils.time, taskStartingTime: utils.time): void;
 }
 
 function SetNewTask(props: Props) {
@@ -62,14 +62,14 @@ function SetNewTask(props: Props) {
 			errorMessage();
 			return false;
 		}
-		alert(utils.timeToString(timeDeadline));
+		props.onNewTask(task, timeDeadline, utils.getCurrentTime());
 	}
 
 	return (
 		<Popover placement="right" size="" gutter={20} isOpen={popoverIsOpen} onClose={() => setPopoverIsOpen(false)}>
 			<PopoverTrigger>
 				<Box px="50px" py="30px" d="flex" onKeyDown={handleKeyDown} flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="100px">
-					<Text mb="10px">Next Task</Text>
+					<Text mb="10px">New Task</Text>
 					<Input mb="20px" placeholder="clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="blue.300" focusBorderColor="lime" w="300px" value={task}></Input>
 					<Box d="flex" justifyContent="space-between" alignItems="center" w="300px">
 						<Text w="125px" fontSize="sm" textAlign="center">Finish in (min)</Text>

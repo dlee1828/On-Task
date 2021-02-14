@@ -1,19 +1,32 @@
 export interface time {
 	hours: number;
 	minutes: number;
+	seconds?: number;
 }
 
 export function getCurrentTime(): time {
 	let d = new Date();
 	let hours = d.getHours();
 	let minutes = d.getMinutes();
+	let seconds = d.getSeconds();
 	return {
 		hours: hours,
 		minutes: minutes,
+		seconds: seconds,
 	}
 }
 
 export function correctTime(t: time) {
+
+	while (t.minutes < 0) {
+		t.minutes += 60;
+		t.hours -= 1;
+	}
+
+	while (t.hours < 0) {
+		t.hours += 24;
+	}
+
 	while (t.minutes > 60) {
 		t.hours += 1;
 		t.minutes -= 60;
@@ -40,6 +53,55 @@ export function addTimes(a: time, b: time): time {
 export function getTimeFromNow(delay: time): time {
 	let currentTime = getCurrentTime();
 	return addTimes(currentTime, delay);
+}
+
+export function subtractTime(a: time, b: time): time {
+
+	let newTime = {
+		hours: a.hours - b.hours,
+		minutes: a.minutes - b.minutes,
+	}
+
+	newTime = correctTime(newTime);
+
+	return newTime;
+}
+
+export function getTimeLeftUntil(timeDeadline: time): time {
+
+	let currentTime = getCurrentTime();
+
+	return subtractTime(timeDeadline, currentTime);
+
+}
+
+function secondsBetween(a: time, b: time) {
+	return 3600 * (b.hours - a.hours) + 60 * (b.minutes - a.minutes) + b.seconds! - a.seconds!;
+}
+
+export function getProgressPercent(startingTime: time, timeDeadline: time): number {
+	timeDeadline.seconds = 0;
+	let totalSeconds = secondsBetween(startingTime, timeDeadline);
+	let d = new Date();
+	let currentSeconds = secondsBetween(startingTime, getCurrentTime());
+	let percent = Math.floor(100 * currentSeconds / totalSeconds);
+	if (percent > 100) percent = 100;
+	return percent;
+}
+
+export function totalMinutes(t: time): number {
+	return t.hours * 60 + t.minutes;
+}
+
+export function formatTimeLeft(timeLeft: time): string {
+
+	let hourString = "";
+
+	if (timeLeft.hours != 0) {
+		hourString = timeLeft.hours.toString() + " hr ";
+	}
+
+	return hourString + timeLeft.minutes.toString() + " min";
 }
 
 export function checkValidTime(str: string): boolean {

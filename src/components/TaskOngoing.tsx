@@ -7,16 +7,16 @@ interface Props {
 	timeDeadline: utils.time;
 	startingTime: utils.time;
 	onLeaveTask(): void;
-	onResetWithMoreTime(minutes: number): void;
+	onResetWithMoreTime(newStartingTime: utils.time, newTimeDeadline: utils.time): void;
 }
 
 let timer: NodeJS.Timeout;
 
 function TaskOngoing(props: Props) {
 
-	const currentTask = props.currentTask;
-	const timeDeadline = props.timeDeadline;
-	const startingTime = props.startingTime;
+	let currentTask = props.currentTask;
+	let timeDeadline = props.timeDeadline;
+	let startingTime = props.startingTime;
 
 	const initialTimeLeft = utils.subtractTime(timeDeadline, startingTime);
 
@@ -36,6 +36,7 @@ function TaskOngoing(props: Props) {
 
 		setTimeLeftState(timeLeft);
 		setProgressPercent(utils.getProgressPercent(startingTime, timeDeadline))
+
 	}
 
 	function handleTimeUp() {
@@ -67,8 +68,21 @@ function TaskOngoing(props: Props) {
 			alert("try again");
 			return;
 		}
+
+		// Send computed update values to parent
+		startingTime = utils.getCurrentTime();
+		timeDeadline = utils.addTimes(startingTime, { hours: 0, minutes: n });
+
+		props.onResetWithMoreTime(startingTime, timeDeadline);
 		setTimeUpBool(false);
-		props.onResetWithMoreTime(n);
+		setShowingMoreTimeMenu(false);
+		updateTimeLeft();
+	}
+
+	function handleKeyDown(e: any) {
+		if (e.key == "Enter") {
+			resetWithMoreTime();
+		}
 	}
 
 	function timeUpButtons() {
@@ -77,7 +91,7 @@ function TaskOngoing(props: Props) {
 			<Box d="flex" flexDir="column">
 				<Button w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleTaskComplete} colorScheme="green" mb="10px">Task Complete</Button>
 				<Button w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleMoreTime} colorScheme="blue" mb="10px">More Time</Button>
-				<Input w="150px" d={showingMoreTimeMenu ? "block" : "none"} mb="10px" placeholder={"minutes"} onChange={(e) => setMoreTimeField(e.target.value)} value={moreTimeField}></Input>
+				<Input w="150px" d={showingMoreTimeMenu ? "block" : "none"} mb="10px" placeholder={"# minutes"} onChange={(e) => setMoreTimeField(e.target.value)} onKeyDown={handleKeyDown} value={moreTimeField}></Input>
 				<Button w="150px" d={showingMoreTimeMenu ? "block" : "none"} variant="outline" colorScheme="green" mb="10px" onClick={resetWithMoreTime}>Confirm</Button>
 				<Button w="150px" d={showingMoreTimeMenu ? "block" : "none"} onClick={() => setShowingMoreTimeMenu(false)} variant="outline" colorScheme="red" mb="10px">Cancel</Button>
 				<Button w="150px" d={!showingMoreTimeMenu ? "blcok" : "none"} onClick={handleCancelTask} colorScheme="red">Cancel Task</Button>
@@ -87,8 +101,9 @@ function TaskOngoing(props: Props) {
 
 	return (
 		<Box px="50px" py="30px" d="flex" flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="100px">
-			<Box px="20px" py="10px" mb="10px" d="flex" justifyContent="center" borderWidth="3px" borderColor="yellow.500" borderRadius="20px">
-				<Text fontWeight="bold">{currentTask}</Text>
+			<Box px="20px" py="10px" mb="10px" d="flex" flexDir="column" alignItems="center" borderWidth="3px" borderColor="yellow.500" borderRadius="20px">
+				<Text fontSize="lg" fontWeight="bold">{currentTask}</Text>
+				<Text>{"by " + utils.timeToString(timeDeadline)}</Text>
 			</Box>
 			<CircularProgress mb="10px" color="pink.500" trackColor="blue.500" capIsRound size={200} thickness={2} value={progressPercent}>
 				<CircularProgressLabel fontSize="17px">

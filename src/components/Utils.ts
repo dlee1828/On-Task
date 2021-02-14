@@ -40,6 +40,7 @@ export function correctTime(t: time) {
 }
 
 export function addTimes(a: time, b: time): time {
+
 	let newTime = {
 		hours: a.hours + b.hours,
 		minutes: a.minutes + b.minutes,
@@ -135,10 +136,12 @@ function doubleDigits(num: string) {
 }
 
 export function timeToString(t: time) {
+
 	let ampm = "am";
+	let hours = t.hours;
 	if (t.hours >= 12) {
 		ampm = "pm";
-		if (t.hours > 12) t.hours -= 12;
+		if (t.hours > 12) hours -= 12;
 	}
-	return t.hours.toString() + ":" + doubleDigits(t.minutes.toString()) + " " + ampm;
+	return hours.toString() + ":" + doubleDigits(t.minutes.toString()) + " " + ampm;
 }

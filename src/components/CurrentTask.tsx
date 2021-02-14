@@ -30,9 +30,9 @@ function CurrentTask(props: Props) {
 		setCurrentMode("newTask");
 	}
 
-	function resetWithMoreTime(minutes: number): void {
-		setTaskStartingTime(utils.getCurrentTime());
-		setTimeDeadline(utils.addTimes(taskStartingTime, { hours: 0, minutes: minutes }));
+	function resetWithMoreTime(newStartingTime: utils.time, newTimeDeadline: utils.time): void {
+		setTaskStartingTime(newStartingTime);
+		setTimeDeadline(newTimeDeadline);
 	}
 
 	function componentSwitch() {

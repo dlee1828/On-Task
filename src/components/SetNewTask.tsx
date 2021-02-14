@@ -10,7 +10,7 @@ function SetNewTask(props: Props) {
 
 	// State variables
 	const [task, setTask] = useState("");
-	const [finishAtTime, setFinishAtTime] = useState(""); // E.g. finish at 4:30
+	const [finishByTime, setFinishByTime] = useState(""); // E.g. finish at 4:30
 	const [finishInTime, setFinishInTime] = useState(""); // E.g. finish in 2 hours
 
 	// Will be passed to parent
@@ -26,9 +26,9 @@ function SetNewTask(props: Props) {
 	// Check if entries work, also sets timeDeadline
 	function validateEntries() {
 		if (task == "") return false;
-		let finishAtTimeString = finishAtTime.trim();
+		let finishByTimeString = finishByTime.trim();
 		let finishInTimeString = finishInTime.trim();
-		if (finishAtTimeString != "" && finishInTimeString != "") return false;
+		if (finishByTimeString != "" && finishInTimeString != "") return false;
 		let isFinishIn = finishInTimeString != "";
 		if (isFinishIn) {
 			if (!/\d+/.test(finishInTimeString)) return false;
@@ -38,9 +38,9 @@ function SetNewTask(props: Props) {
 			})
 		}
 		else {
-			if (!utils.checkValidTime(finishAtTimeString)) return false;
+			if (!utils.checkValidTime(finishByTimeString)) return false;
 			let currentTime = utils.getCurrentTime();
-			let newTime = utils.stringToTime(finishAtTimeString) as utils.time;
+			let newTime = utils.stringToTime(finishByTimeString) as utils.time;
 			newTime = utils.correctTime(newTime);
 			if (newTime.hours < currentTime.hours) newTime.hours += 12;
 			timeDeadline = newTime;
@@ -62,6 +62,7 @@ function SetNewTask(props: Props) {
 			errorMessage();
 			return false;
 		}
+
 		props.onNewTask(task, timeDeadline, utils.getCurrentTime());
 	}
 
@@ -70,15 +71,15 @@ function SetNewTask(props: Props) {
 			<PopoverTrigger>
 				<Box px="50px" py="30px" d="flex" onKeyDown={handleKeyDown} flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="100px">
 					<Text mb="10px">New Task</Text>
-					<Input mb="20px" placeholder="clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="blue.300" focusBorderColor="lime" w="300px" value={task}></Input>
-					<Box d="flex" justifyContent="space-between" alignItems="center" w="300px">
+					<Input mb="20px" placeholder="Clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="purple.500" focusBorderColor="lime" w="300px" value={task}></Input>
+					<Box d="flex" mb="2px" justifyContent="space-between" alignItems="center" w="300px">
 						<Text w="125px" fontSize="sm" textAlign="center">Finish in (min)</Text>
-						<Text w="125px" fontSize="sm" textAlign="center">Finish at</Text>
+						<Text w="125px" fontSize="sm" textAlign="center">Finish by</Text>
 					</Box>
 					<Box mb="20px" d="flex" justifyContent="space-between" alignItems="center" w="300px">
-						<Input value={finishInTime} onChange={(e) => setFinishInTime(e.target.value)} placeholder="30" w="125px"></Input>
+						<Input isDisabled={finishByTime != ""} value={finishInTime} onChange={(e) => setFinishInTime(e.target.value)} placeholder="15" w="125px"></Input>
 						<Text>OR</Text>
-						<Input value={finishAtTime} onChange={(e) => setFinishAtTime(e.target.value)} placeholder="7:30" w="125px"></Input>
+						<Input isDisabled={finishInTime != ""} value={finishByTime} onChange={(e) => setFinishByTime(e.target.value)} placeholder="7:30" w="125px"></Input>
 					</Box>
 					<Button onClick={confirmNewTask} variant="outline" colorScheme="orange">Confirm</Button>
 				</Box >

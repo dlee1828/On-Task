@@ -1,5 +1,6 @@
 # On Task
-[small productivity tool](https://productivity-9dbe5.web.app/)
+
+<a href="https://productivity-9dbe5.web.app/" target="_blank">productivity tool</a>
 
 
 

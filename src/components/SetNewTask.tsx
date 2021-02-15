@@ -10,6 +10,7 @@ function SetNewTask(props: Props) {
 
 	// State variables
 	const [task, setTask] = useState("");
+	// Strings for input field
 	const [finishByTime, setFinishByTime] = useState(""); // E.g. finish at 4:30
 	const [finishInTime, setFinishInTime] = useState(""); // E.g. finish in 2 hours
 
@@ -23,18 +24,25 @@ function SetNewTask(props: Props) {
 		}
 	}
 
-	// Check if entries work, also sets timeDeadline
+	// Check if entries are valid, also sets timeDeadline
 	function validateEntries() {
 		if (task == "") return false;
+
+		// Trim strings 
 		let finishByTimeString = finishByTime.trim();
 		let finishInTimeString = finishInTime.trim();
+
+		// Check if both are nonempty
 		if (finishByTimeString != "" && finishInTimeString != "") return false;
+
+		// Checks validity of whichever field, sets timedeadline
 		let isFinishIn = finishInTimeString != "";
 		if (isFinishIn) {
 			if (!/\d+/.test(finishInTimeString)) return false;
 			timeDeadline = utils.getTimeFromNow({
 				hours: 0,
 				minutes: parseInt(finishInTimeString),
+				seconds: 0,
 			})
 		}
 		else {

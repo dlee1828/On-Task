@@ -1,8 +1,12 @@
+import { timeline } from "console";
+
 export interface time {
 	hours: number;
 	minutes: number;
-	seconds?: number;
+	seconds: number;
 }
+
+export const timeZero = { hours: 0, minutes: 0, seconds: 0 };
 
 export function getCurrentTime(): time {
 	let d = new Date();
@@ -18,6 +22,11 @@ export function getCurrentTime(): time {
 
 export function correctTime(t: time) {
 
+	while (t.seconds < 0) {
+		t.seconds += 60;
+		t.minutes -= 1;
+	}
+
 	while (t.minutes < 0) {
 		t.minutes += 60;
 		t.hours -= 1;
@@ -25,6 +34,11 @@ export function correctTime(t: time) {
 
 	while (t.hours < 0) {
 		t.hours += 24;
+	}
+
+	while (t.seconds > 60) {
+		t.seconds -= 60;
+		t.minutes += 1;
 	}
 
 	while (t.minutes > 60) {
@@ -44,6 +58,7 @@ export function addTimes(a: time, b: time): time {
 	let newTime = {
 		hours: a.hours + b.hours,
 		minutes: a.minutes + b.minutes,
+		seconds: a.seconds + b.seconds,
 	}
 
 	newTime = correctTime(newTime)
@@ -61,6 +76,7 @@ export function subtractTime(a: time, b: time): time {
 	let newTime = {
 		hours: a.hours - b.hours,
 		minutes: a.minutes - b.minutes,
+		seconds: a.seconds - b.seconds,
 	}
 
 	newTime = correctTime(newTime);
@@ -73,21 +89,22 @@ export function getTimeLeftUntil(timeDeadline: time): time {
 	let currentTime = getCurrentTime();
 
 	return subtractTime(timeDeadline, currentTime);
-
 }
 
+// Returns seconds from a to b, or 0 if a is after b
 function secondsBetween(a: time, b: time) {
-	return 3600 * (b.hours - a.hours) + 60 * (b.minutes - a.minutes) + b.seconds! - a.seconds!;
+	let ans = 3600 * (b.hours - a.hours) + 60 * (b.minutes - a.minutes) + b.seconds - a.seconds;
+	return Math.max(0, ans);
 }
 
 export function getProgressPercent(startingTime: time, timeDeadline: time): number {
-	timeDeadline.seconds = 0;
+
+
 	let totalSeconds = secondsBetween(startingTime, timeDeadline);
-	let d = new Date();
-	let currentSeconds = secondsBetween(startingTime, getCurrentTime());
-	let percent = Math.floor(100 * currentSeconds / totalSeconds);
-	if (percent > 100) percent = 100;
-	return percent;
+	let elapsedSeconds = secondsBetween(startingTime, getCurrentTime());
+
+	let percent = Math.floor(100 * elapsedSeconds / totalSeconds);
+	return Math.min(100, percent);
 }
 
 export function totalMinutes(t: time): number {
@@ -97,12 +114,20 @@ export function totalMinutes(t: time): number {
 export function formatTimeLeft(timeLeft: time): string {
 
 	let hourString = "";
+	let minuteString = "";
+	let secondString = "";
 
 	if (timeLeft.hours != 0) {
 		hourString = timeLeft.hours.toString() + " hr ";
 	}
 
-	return hourString + timeLeft.minutes.toString() + " min";
+	if (timeLeft.minutes != 0) {
+		minuteString = timeLeft.minutes.toString() + " min ";
+	}
+
+	secondString = timeLeft.seconds.toString() + " sec";
+
+	return hourString + minuteString + secondString;
 }
 
 export function checkValidTime(str: string): boolean {
@@ -125,6 +150,7 @@ export function stringToTime(str: string): boolean | time {
 	return {
 		hours: hours,
 		minutes: minutes,
+		seconds: 0,
 	}
 }
 
@@ -136,7 +162,6 @@ function doubleDigits(num: string) {
 }
 
 export function timeToString(t: time) {
-
 	let ampm = "am";
 	let hours = t.hours;
 	if (t.hours >= 12) {

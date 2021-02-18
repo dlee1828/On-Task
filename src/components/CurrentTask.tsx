@@ -8,10 +8,8 @@ interface Props {
 
 }
 
-type mode = "newTask" | "taskOngoing";
 type localStorageName = "currentMode" | "currentTask" | "taskStartingTime" | "timeDeadline"
 
-let timer: NodeJS.Timeout;
 function CurrentTask(props: Props) {
 
 	// Storing above variables in localStorage
@@ -74,6 +72,8 @@ function CurrentTask(props: Props) {
 
 	// Called when user requests more time for current task
 	function resetWithMoreTime(newStartingTime: utils.time, newTimeDeadline: utils.time): void {
+		console.log("reset with more time called:", newStartingTime, newTimeDeadline);
+
 		setTaskStartingTime(newStartingTime);
 		setTimeDeadline(newTimeDeadline);
 	}

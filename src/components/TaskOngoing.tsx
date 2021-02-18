@@ -33,7 +33,7 @@ function TaskOngoing(props: Props) {
 	let timeLeft = initialTimeLeft;
 
 	// Whether time has run out
-	let [timeUpBool, setTimeUpBool] = useState(false);
+	const [timeUpBool, setTimeUpBool] = useState(false);
 
 	// Time left as a string
 	function timeLeftString() {
@@ -48,7 +48,7 @@ function TaskOngoing(props: Props) {
 		// Updating timeLeft
 		timeLeft = utils.getTimeLeftUntil(timeDeadline);
 
-		// Time is out if timeLeft = 0
+		// Time is out if timeLeft = 0 or >= 20 hours
 		if ((timeLeft.hours >= 20) || (timeLeft.hours == 0 && timeLeft.minutes == 0 && timeLeft.seconds == 0)) handleTimeUp();
 
 		setTimeLeftState(timeLeft);
@@ -61,9 +61,11 @@ function TaskOngoing(props: Props) {
 		setTimeUpBool(true);
 	}
 
-	// Updates time left every second 
-	clearInterval(timer);
-	timer = setInterval(updateTimeLeft, 1000);
+	// useEffect hook for updating timeLeftState
+	useEffect(() => {
+		timer = setInterval(updateTimeLeft, 1000);
+		return () => clearInterval(timer);
+	}, [timeLeftState])
 
 	// State variables for time up menus & fields
 	let [showingMoreTimeMenu, setShowingMoreTimeMenu] = useState(false);
@@ -98,6 +100,12 @@ function TaskOngoing(props: Props) {
 		setShowingMoreTimeMenu(false);
 		updateTimeLeft();
 	}
+
+	// Use effect for updating timeLeft state after timeUpBool has changed
+	// Useful when user requests more time 
+	useEffect(() => {
+		updateTimeLeft();
+	}, [timeUpBool])
 
 	function handleKeyDown(e: any) {
 		if (e.key == "Enter") {

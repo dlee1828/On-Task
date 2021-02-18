@@ -1,5 +1,3 @@
-import { timeline } from "console";
-
 export interface time {
 	hours: number;
 	minutes: number;
@@ -20,8 +18,7 @@ export function getCurrentTime(): time {
 	}
 }
 
-export function correctTime(t: time) {
-
+function correctTimeAbsolute(t: time) {
 	while (t.seconds < 0) {
 		t.seconds += 60;
 		t.minutes -= 1;
@@ -46,11 +43,30 @@ export function correctTime(t: time) {
 		t.minutes -= 60;
 	}
 
+	return t;
+}
+
+export function correctTime(t: time) {
+
+	t = correctTimeAbsolute(t);
+
 	while (t.hours >= 24) {
 		t.hours -= 24;
 	}
 
 	return t;
+}
+
+export function addTimesAbsolute(a: time, b: time): time {
+	let newTime = {
+		hours: a.hours + b.hours,
+		minutes: a.minutes + b.minutes,
+		seconds: a.seconds + b.seconds,
+	}
+
+	newTime = correctTimeAbsolute(newTime)
+
+	return newTime;
 }
 
 export function addTimes(a: time, b: time): time {
@@ -169,4 +185,26 @@ export function timeToString(t: time) {
 		if (t.hours > 12) hours -= 12;
 	}
 	return hours.toString() + ":" + doubleDigits(t.minutes.toString()) + " " + ampm;
+}
+
+export function minTime(a: time, b: time) {
+	if (a.hours < b.hours) {
+		return a;
+	}
+	if (a.hours > b.hours) {
+		return b;
+	}
+	if (a.minutes < b.minutes) {
+		return a;
+	}
+	if (a.minutes > b.minutes) {
+		return b;
+	}
+	if (a.seconds < b.seconds) {
+		return a;
+	}
+	if (a.seconds > b.seconds) {
+		return b;
+	}
+	return a;
 }

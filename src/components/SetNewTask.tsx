@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Button, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useColorMode } from '@chakra-ui/react';
+import React, { useRef, useState } from 'react';
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogOverlay, Box, Button, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useColorMode } from '@chakra-ui/react';
 import * as utils from "./Utils";
+import InfoContainer from './InfoContainer';
 
 interface Props {
 	onNewTask(task: string, timeDeadline: utils.time, taskStartingTime: utils.time): void;
+	endWorkSession(): void;
 }
 
 function SetNewTask(props: Props) {
@@ -39,9 +41,11 @@ function SetNewTask(props: Props) {
 		let isFinishIn = finishInTimeString != "";
 		if (isFinishIn) {
 			if (!/\d+/.test(finishInTimeString)) return false;
+			let minutes = parseInt(finishInTimeString);
+			if (minutes <= 0) return false;
 			timeDeadline = utils.getTimeFromNow({
 				hours: 0,
-				minutes: parseInt(finishInTimeString),
+				minutes: minutes,
 				seconds: 0,
 			})
 		}
@@ -74,29 +78,50 @@ function SetNewTask(props: Props) {
 		props.onNewTask(task, timeDeadline, utils.getCurrentTime());
 	}
 
+	// End Work Session Button
+	const [dialogIsOpen, setDialogIsOpen] = useState(false);
+	const cancelRef = useRef();
+
 	return (
-		<Popover placement="right" size="" gutter={20} isOpen={popoverIsOpen} onClose={() => setPopoverIsOpen(false)}>
-			<PopoverTrigger>
-				<Box px="50px" py="30px" d="flex" onKeyDown={handleKeyDown} flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="100px">
-					<Text mb="10px">New Task</Text>
-					<Input mb="20px" placeholder="Clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="purple.500" focusBorderColor="lime" w="300px" value={task}></Input>
-					<Box d="flex" mb="2px" justifyContent="space-between" alignItems="center" w="300px">
-						<Text w="125px" fontSize="sm" textAlign="center">Finish in (min)</Text>
-						<Text w="125px" fontSize="sm" textAlign="center">Finish by</Text>
-					</Box>
-					<Box mb="20px" d="flex" justifyContent="space-between" alignItems="center" w="300px">
-						<Input isDisabled={finishByTime != ""} value={finishInTime} onChange={(e) => setFinishInTime(e.target.value)} placeholder="15" w="125px"></Input>
-						<Text>OR</Text>
-						<Input isDisabled={finishInTime != ""} value={finishByTime} onChange={(e) => setFinishByTime(e.target.value)} placeholder="7:30" w="125px"></Input>
-					</Box>
-					<Button onClick={confirmNewTask} variant="outline" colorScheme="orange">Confirm</Button>
-				</Box >
-			</PopoverTrigger>
-			<PopoverContent textAlign="center" w="140px" bg="pink.500">
-				<PopoverArrow bg="pink.500"></PopoverArrow>
-				{popoverMessage}
-			</PopoverContent>
-		</Popover>
+		<Box d="flex" flexDir="column" alignItems="center">
+			<Popover placement="right" size="" gutter={20} isOpen={popoverIsOpen} onClose={() => setPopoverIsOpen(false)}>
+				<PopoverTrigger>
+					<Box px="50px" py="30px" d="flex" onKeyDown={handleKeyDown} flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="50px">
+						<Text mb="10px">New Task</Text>
+						<Input mb="20px" placeholder="Clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="purple.500" focusBorderColor="lime" w="300px" value={task}></Input>
+						<Box d="flex" mb="2px" justifyContent="space-between" alignItems="center" w="300px">
+							<Text w="125px" fontSize="sm" textAlign="center">Finish in (min)</Text>
+							<Text w="125px" fontSize="sm" textAlign="center">Finish by</Text>
+						</Box>
+						<Box mb="20px" d="flex" justifyContent="space-between" alignItems="center" w="300px">
+							<Input isDisabled={finishByTime != ""} value={finishInTime} onChange={(e) => setFinishInTime(e.target.value)} placeholder="15" w="125px"></Input>
+							<Text>OR</Text>
+							<Input isDisabled={finishInTime != ""} value={finishByTime} onChange={(e) => setFinishByTime(e.target.value)} placeholder="7:30" w="125px"></Input>
+						</Box>
+						<Button onClick={confirmNewTask} variant="outline" colorScheme="orange">Confirm</Button>
+					</Box >
+				</PopoverTrigger>
+				<PopoverContent textAlign="center" w="140px" bg="pink.500">
+					<PopoverArrow bg="pink.500"></PopoverArrow>
+					{popoverMessage}
+				</PopoverContent>
+			</Popover>
+			<InfoContainer></InfoContainer>
+			<Button onClick={() => setDialogIsOpen(true)} mt="50px" variant="outline" colorScheme="red">End Work Session</Button>
+			<AlertDialog isOpen={dialogIsOpen} leastDestructiveRef={cancelRef as any} onClose={() => setDialogIsOpen(false)}>
+				<AlertDialogOverlay>
+					<AlertDialogContent w="200px">
+						<AlertDialogBody d="flex" py="20px" alignItems="center" flexDir="column">
+							Are you sure?
+							<Box w="100%" mt="20px" d="flex" justifyContent="space-around">
+								<Button onClick={props.endWorkSession}>Yes</Button>
+								<Button ref={cancelRef as any} onClick={() => setDialogIsOpen(false)}>No</Button>
+							</Box>
+						</AlertDialogBody>
+					</AlertDialogContent>
+				</AlertDialogOverlay>
+			</AlertDialog>
+		</Box>
 
 	)
 }

@@ -7,7 +7,7 @@ interface Props {
 	currentTask: string;
 	timeDeadline: utils.time;
 	startingTime: utils.time;
-	onLeaveTask(): void;
+	onLeaveTask(completed: boolean): void;
 	onResetWithMoreTime(newStartingTime: utils.time, newTimeDeadline: utils.time): void;
 }
 
@@ -72,7 +72,7 @@ function TaskOngoing(props: Props) {
 	let [moreTimeField, setMoreTimeField] = useState("");
 
 	function handleTaskComplete() {
-		props.onLeaveTask();
+		props.onLeaveTask(true);
 	}
 
 	function handleMoreTime() {
@@ -80,7 +80,7 @@ function TaskOngoing(props: Props) {
 	}
 
 	function handleCancelTask() {
-		props.onLeaveTask();
+		props.onLeaveTask(false);
 	}
 
 	// User requests more time for current task
@@ -115,14 +115,15 @@ function TaskOngoing(props: Props) {
 
 	function timeUpButtons() {
 		if (!timeUpBool) return;
+		const buttonVariant = "outline"
 		return (
 			<Box d="flex" flexDir="column">
-				<Button w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleTaskComplete} colorScheme="green" mb="10px">Task Complete</Button>
-				<Button w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleMoreTime} colorScheme="blue" mb="10px">More Time</Button>
+				<Button variant={buttonVariant} w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleTaskComplete} colorScheme="green" mb="10px">Task Complete</Button>
+				<Button variant={buttonVariant} w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleMoreTime} colorScheme="blue" mb="10px">More Time</Button>
 				<Input w="150px" d={showingMoreTimeMenu ? "block" : "none"} mb="10px" placeholder={"# minutes"} onChange={(e) => setMoreTimeField(e.target.value)} onKeyDown={handleKeyDown} value={moreTimeField}></Input>
-				<Button w="150px" d={showingMoreTimeMenu ? "block" : "none"} variant="outline" colorScheme="green" mb="10px" onClick={resetWithMoreTime}>Confirm</Button>
-				<Button w="150px" d={showingMoreTimeMenu ? "block" : "none"} onClick={() => setShowingMoreTimeMenu(false)} variant="outline" colorScheme="red" mb="10px">Cancel</Button>
-				<Button w="150px" d={!showingMoreTimeMenu ? "blcok" : "none"} onClick={handleCancelTask} colorScheme="red">Cancel Task</Button>
+				<Button variant={buttonVariant} w="150px" d={showingMoreTimeMenu ? "block" : "none"} colorScheme="green" mb="10px" onClick={resetWithMoreTime}>Confirm</Button>
+				<Button variant={buttonVariant} w="150px" d={showingMoreTimeMenu ? "block" : "none"} onClick={() => setShowingMoreTimeMenu(false)} colorScheme="red" mb="10px">Cancel</Button>
+				<Button variant={buttonVariant} w="150px" d={!showingMoreTimeMenu ? "blcok" : "none"} onClick={handleCancelTask} colorScheme="red">Cancel Task</Button>
 			</Box>
 		)
 	}
@@ -133,7 +134,7 @@ function TaskOngoing(props: Props) {
 	const cancelRef = useRef();
 
 	return (
-		<Box px="50px" py="30px" d="flex" flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="100px">
+		<Box px="50px" py="30px" d="flex" flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="50px">
 			<Box px="20px" py="10px" mb="10px" d="flex" flexDir="column" alignItems="center" borderWidth="3px" borderColor="yellow.500" borderRadius="20px">
 				<Text fontSize="lg" fontWeight="bold">{currentTask}</Text>
 				<Text>{"by " + utils.timeToString(timeDeadline)}</Text>
@@ -154,10 +155,10 @@ function TaskOngoing(props: Props) {
 				<AlertDialogOverlay>
 					<AlertDialogContent p="15px" w="auto" h="auto" mt="200px">
 						<AlertDialogBody d="flex" flexDir="column" justifyContent="center" alignItems="center">
-							<Button w="150px" variant="outline" onClick={props.onLeaveTask} colorScheme="green" mb="10px" ref={cancelRef as any}>
+							<Button w="150px" variant="outline" onClick={() => props.onLeaveTask(true)} colorScheme="green" mb="10px" ref={cancelRef as any}>
 								Task Completed
               				</Button>
-							<Button w="150px" variant="outline" onClick={props.onLeaveTask} colorScheme="red">
+							<Button w="150px" variant="outline" onClick={() => props.onLeaveTask(false)} colorScheme="red">
 								Cancel Task
               				</Button>
 						</AlertDialogBody>

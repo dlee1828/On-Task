@@ -5,14 +5,14 @@ import TaskOngoing from './TaskOngoing';
 import * as utils from "./Utils";
 
 interface Props {
-
+	endWorkSession(): void;
 }
 
 type localStorageName = "currentMode" | "currentTask" | "taskStartingTime" | "timeDeadline"
 
 function CurrentTask(props: Props) {
 
-	// Storing above variables in localStorage
+	// Storing task variables in localStorage
 	function updateLocalStorage() {
 		localStorage.setItem("currentMode", currentMode);
 		localStorage.setItem("currentTask", currentTask);
@@ -20,7 +20,7 @@ function CurrentTask(props: Props) {
 		localStorage.setItem("timeDeadline", JSON.stringify(timeDeadline));
 	}
 
-	// Gets either locally stored value or default value if no locally stored value
+	// Gets task variables from local storage
 	function getLocalStorageOrDefault(name: localStorageName) {
 		let candidate = localStorage.getItem(name);
 		if (candidate == null) {
@@ -50,6 +50,7 @@ function CurrentTask(props: Props) {
 
 	// Update local storage on every component update
 	useEffect(() => {
+		document.title = "On Task";
 		updateLocalStorage();
 	})
 
@@ -62,8 +63,31 @@ function CurrentTask(props: Props) {
 		setCurrentMode("taskOngoing");
 	}
 
-	// Called when task has ended
-	function taskEnded(): void {
+	// Storing completion of task in local storage
+	function addNewCompletedTask() {
+		// completedTasks is a list of completed task objects
+		let item = localStorage.getItem("completedTasks")
+		let completedTasks = JSON.parse(item == null ? "[]" : item);
+		let endingTime = utils.minTime(utils.getCurrentTime(), timeDeadline);
+		let duration = utils.subtractTime(endingTime, taskStartingTime)
+		completedTasks.push(
+			{
+				taskName: currentTask,
+				startingTime: taskStartingTime,
+				endingTime: endingTime,
+				duration: duration,
+			}
+		)
+		localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
+	}
+
+	// Called when task has ended, handles local storage of completed tasks
+	function taskEnded(completed: boolean): void {
+
+		if (completed) {
+			addNewCompletedTask();
+		}
+
 		setCurrentTask("");
 		setCurrentMode("newTask");
 		setTaskStartingTime(utils.timeZero);
@@ -72,17 +96,17 @@ function CurrentTask(props: Props) {
 
 	// Called when user requests more time for current task
 	function resetWithMoreTime(newStartingTime: utils.time, newTimeDeadline: utils.time): void {
-		console.log("reset with more time called:", newStartingTime, newTimeDeadline);
-
+		addNewCompletedTask();
 		setTaskStartingTime(newStartingTime);
 		setTimeDeadline(newTimeDeadline);
 	}
+
 
 	function componentSwitch() {
 		switch (currentMode) {
 			case "newTask":
 				return (
-					<SetNewTask onNewTask={setNewTask}></SetNewTask>
+					<SetNewTask endWorkSession={props.endWorkSession} onNewTask={setNewTask}></SetNewTask>
 				)
 			case "taskOngoing":
 				return (

@@ -208,3 +208,12 @@ export function minTime(a: time, b: time) {
 	}
 	return a;
 }
+
+const MS_PER_DAY = 86400000;
+
+export function getDaysSince(num: number) {
+	const now = Date.now();
+	let diff = now - num;
+	let days = Math.floor(diff / MS_PER_DAY);
+	return days;
+}

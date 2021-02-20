@@ -50,7 +50,6 @@ function CurrentTask(props: Props) {
 
 	// Update local storage on every component update
 	useEffect(() => {
-		document.title = "Work";
 		updateLocalStorage();
 	})
 

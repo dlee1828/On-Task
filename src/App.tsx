@@ -21,6 +21,10 @@ function App() {
 		setCurrentPage(item as pageType);
 	}, [])
 
+	useEffect(() => {
+		document.title = page.charAt(0).toUpperCase() + page.slice(1, page.length);
+	}, [page])
+
 	function displayCorrectPage() {
 		switch (page) {
 			case "work":

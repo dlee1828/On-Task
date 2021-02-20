@@ -110,12 +110,12 @@ function SetNewTask(props: Props) {
 			<Button onClick={() => setDialogIsOpen(true)} mt="50px" variant="outline" colorScheme="red">End Work Session</Button>
 			<AlertDialog isOpen={dialogIsOpen} leastDestructiveRef={cancelRef as any} onClose={() => setDialogIsOpen(false)}>
 				<AlertDialogOverlay>
-					<AlertDialogContent w="200px">
+					<AlertDialogContent w="300px">
 						<AlertDialogBody d="flex" py="20px" alignItems="center" flexDir="column">
-							Are you sure?
-							<Box w="100%" mt="20px" d="flex" justifyContent="space-around">
-								<Button onClick={props.endWorkSession}>Yes</Button>
-								<Button ref={cancelRef as any} onClick={() => setDialogIsOpen(false)}>No</Button>
+							End current work session?
+							<Box w="100%" mt="20px" d="flex" justifyContent="center">
+								<Button mx="15px" ref={cancelRef as any} onClick={() => setDialogIsOpen(false)}>Cancel</Button>
+								<Button mx="15px" colorScheme="red" onClick={props.endWorkSession}>Yes</Button>
 							</Box>
 						</AlertDialogBody>
 					</AlertDialogContent>

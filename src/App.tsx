@@ -46,7 +46,7 @@ function App() {
 			{
 				displayCorrectPage()
 			}
-			<Box w="150px"></Box>
+			<Box w="170px"></Box>
 		</Box>
 	);
 }

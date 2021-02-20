@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Button, Collapse, IconButton, useDisclosure } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { CloseIcon, HamburgerIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { pageType } from '../myTypes';
 import userEvent from '@testing-library/user-event';
 
@@ -39,13 +39,19 @@ function MyMenu(props: Props) {
 	// Page names
 	const pages: pageType[] = [
 		"work",
-		"goals",
 		"habits",
 	]
 
+	function displayCorrectIcon() {
+		if (isOpen) {
+			return <SmallCloseIcon></SmallCloseIcon>
+		}
+		else return <HamburgerIcon></HamburgerIcon>
+	}
+
 	return (
-		<Box w="150px" mt="25px" h="auto">
-			<IconButton ref={iconNodeRef} ml="25px" onClick={onToggle} aria-label="Menu" icon={<HamburgerIcon></HamburgerIcon>}></IconButton>
+		<Box w="170px" mt="25px" h="auto">
+			<IconButton ref={iconNodeRef} ml="25px" onClick={onToggle} aria-label="Menu" icon={displayCorrectIcon()}></IconButton>
 			<Collapse in={isOpen} animateOpacity>
 				<Box ref={buttonNodeRef} d="flex" flexDir="column" px="25px" pb="25px" w="100%">
 					{

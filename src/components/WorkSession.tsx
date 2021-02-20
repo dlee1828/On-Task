@@ -16,7 +16,19 @@ function WorkSession(props: Props) {
 
 	function endWorkSession() {
 		setInWorkSession(false);
-		localStorage.clear();
+		// clear local storage for:
+		let itemNames = [
+			"taskStartingTime",
+			"completedTasks",
+			"currentTask",
+			"timeDeadline",
+			"inWorkSession",
+			"currentMode",
+		]
+
+		for (let i = 0; i < itemNames.length; i++) {
+			localStorage.removeItem(itemNames[i]);
+		}
 	}
 
 	// Displays either button to start work session or current work session 

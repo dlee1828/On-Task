@@ -41,12 +41,11 @@ function HabitItem(props: { habitObject: habitObjectType, deleteHabit(x: number)
 	]
 
 	// Finding color for current habit
-	let colorIndex: number = 0;
+	const [colorIndex, setColorIndex] = useState(0);
 	for (let i = 1; i < dayThresholds.length; i++) {
-		if (days >= dayThresholds[i]) colorIndex = i;
+		if (days >= dayThresholds[i]) setColorIndex(i);
 		else break;
 	}
-	const habitColor = habitColors[colorIndex];
 
 	// Habit button actions
 	function editHabit(description: string) {
@@ -77,7 +76,7 @@ function HabitItem(props: { habitObject: habitObjectType, deleteHabit(x: number)
 	const [newHabitName, setNewHabitName] = useState(description);
 
 	return (
-		<Box d="flex" alignItems="center" bgColor={habitColor} borderBottomWidth="1px" h="60px" w="600px">
+		<Box d="flex" alignItems="center" bgColor={habitColors[colorIndex]} borderBottomWidth="1px" h="60px" w="600px">
 			<Box pl="30px" w="350px" overflow="scroll" h="100%" d="flex" alignItems="center" borderRightWidth="1px">
 				<Text whiteSpace="nowrap">{description}</Text>
 			</Box>

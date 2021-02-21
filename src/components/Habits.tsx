@@ -42,10 +42,20 @@ function HabitItem(props: { habitObject: habitObjectType, deleteHabit(x: number)
 
 	// Finding color for current habit
 	const [colorIndex, setColorIndex] = useState(0);
-	for (let i = 1; i < dayThresholds.length; i++) {
-		if (days >= dayThresholds[i]) setColorIndex(i);
-		else break;
+
+	function setCorrectHabitColor() {
+		let index = 0;
+		for (let i = 1; i < dayThresholds.length; i++) {
+			if (days >= dayThresholds[i]) index = i;
+			else break;
+		}
+
+		setColorIndex(index);
 	}
+
+	useEffect(() => {
+		setCorrectHabitColor();
+	}, []);
 
 	// Habit button actions
 	function editHabit(description: string) {

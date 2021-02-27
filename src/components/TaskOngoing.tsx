@@ -2,6 +2,8 @@ import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, CircularProgress, CircularProgressLabel, IconButton, Input, Text } from '@chakra-ui/react';
 import * as utils from './Utils';
 import { CloseIcon, SettingsIcon } from '@chakra-ui/icons';
+import chime from '../assets/chime.mp3';
+import useSound from 'use-sound';
 
 interface Props {
 	currentTask: string;
@@ -53,12 +55,16 @@ function TaskOngoing(props: Props) {
 
 		setTimeLeftState(timeLeft);
 		setProgressPercent(utils.getProgressPercent(startingTime, timeDeadline))
+
+
 	}
 
-	// Clear timer, set timeUpBool to true
+	// Clear timer, set timeUpBool to true, play sound
+	const [playAudio] = useSound(chime)
 	function handleTimeUp() {
 		clearInterval(timer);
 		setTimeUpBool(true);
+		playAudio();
 	}
 
 	// useEffect hook for updating timeLeftState
@@ -70,6 +76,7 @@ function TaskOngoing(props: Props) {
 	// State variables for time up menus & fields
 	let [showingMoreTimeMenu, setShowingMoreTimeMenu] = useState(false);
 	let [moreTimeField, setMoreTimeField] = useState("");
+
 
 	function handleTaskComplete() {
 		props.onLeaveTask(true);
@@ -165,7 +172,6 @@ function TaskOngoing(props: Props) {
 					</AlertDialogContent>
 				</AlertDialogOverlay>
 			</AlertDialog>
-
 		</Box>
 	)
 }

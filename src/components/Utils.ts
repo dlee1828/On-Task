@@ -18,6 +18,7 @@ export function getCurrentTime(): time {
 	}
 }
 
+// Corrects time allowing for multiple days
 function correctTimeAbsolute(t: time) {
 	while (t.seconds < 0) {
 		t.seconds += 60;
@@ -33,12 +34,12 @@ function correctTimeAbsolute(t: time) {
 		t.hours += 24;
 	}
 
-	while (t.seconds > 60) {
+	while (t.seconds >= 60) {
 		t.seconds -= 60;
 		t.minutes += 1;
 	}
 
-	while (t.minutes > 60) {
+	while (t.minutes >= 60) {
 		t.hours += 1;
 		t.minutes -= 60;
 	}
@@ -46,6 +47,7 @@ function correctTimeAbsolute(t: time) {
 	return t;
 }
 
+// Corrects time to be < 24 hours
 export function correctTime(t: time) {
 
 	t = correctTimeAbsolute(t);

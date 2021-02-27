@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay, Box, Button, ButtonGroup, IconButton, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useDisclosure } from '@chakra-ui/react';
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay, Box, Button, ButtonGroup, IconButton, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import * as utils from './Utils';
 import { CloseIcon, DeleteIcon, EditIcon, RepeatClockIcon, SunIcon } from '@chakra-ui/icons';
 
@@ -279,14 +279,26 @@ function Habits(props: Props) {
 	let item = localStorage.getItem("habits");
 	const [habits, setHabits] = useState((item == null ? [] : JSON.parse(item)) as habitObjectType[]);
 
+	const habitToast = useToast();
+
 	function addHabit(description: string) {
 		let newHabit: habitObjectType = {
 			description: description,
 			startTime: Date.now(),
 		}
+		// Adding habit to habits state
 		let habitsTemp = habits.slice();
 		habitsTemp.push(newHabit);
 		setHabits(habitsTemp);
+		// Toast for added habit
+		habitToast({
+			title: "New habit added.",
+			status: "success",
+			position: "top-right",
+			description: "Day streak will update automatically.",
+			duration: 7000,
+			isClosable: true,
+		})
 	}
 
 	// UseEffect to store habits in local storage

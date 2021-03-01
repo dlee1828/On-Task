@@ -178,7 +178,7 @@ function HabitsContainer(props: { habits: habitObjectType[], deleteHabit(x: numb
 	}
 
 	return (
-		<Box h="400px" d="flex" flexDir="column" alignItems="center" borderRadius="30px" boxShadow="md" borderWidth="1px" overflow="scroll" w="602px">
+		<Box h="500px" d="flex" flexDir="column" alignItems="center" borderRadius="30px" boxShadow="md" borderWidth="1px" overflow="scroll" w="602px">
 			{
 				habits.map((item) => {
 					return <HabitItem deleteHabit={props.deleteHabit} editHabit={props.editHabit} resetHabit={props.resetHabit} key={item.startTime} habitObject={item}></HabitItem>

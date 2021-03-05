@@ -140,6 +140,14 @@ function TaskOngoing(props: Props) {
 	const closeAlert = () => setAlertIsOpen(false);
 	const cancelRef = useRef();
 
+	// Alert confirm cancel task functionality
+	const [cancelTaskText, setCancelTaskText] = useState("Cancel Task");
+
+	function alertCancelTaskClicked() {
+		if (cancelTaskText == "Confirm?") props.onLeaveTask(false);
+		else (setCancelTaskText("Confirm?"));
+	}
+
 	return (
 		<Box px="50px" py="30px" d="flex" flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="50px">
 			<Box px="20px" py="10px" mb="10px" d="flex" flexDir="column" alignItems="center" borderWidth="3px" borderColor="yellow.500" borderRadius="20px">
@@ -153,7 +161,7 @@ function TaskOngoing(props: Props) {
 			</CircularProgress>
 			{
 				timeUpBool ? null : (
-					<IconButton aria-label="options" onClick={() => setAlertIsOpen(true)} icon={<SettingsIcon />}></IconButton>
+					<IconButton aria-label="options" onClick={() => { setAlertIsOpen(true); setCancelTaskText("Cancel Task") }} icon={<SettingsIcon />}></IconButton>
 				)
 			}
 			{timeUpButtons()}
@@ -165,9 +173,9 @@ function TaskOngoing(props: Props) {
 							<Button w="150px" variant="outline" onClick={() => props.onLeaveTask(true)} colorScheme="green" mb="10px" ref={cancelRef as any}>
 								Task Completed
               				</Button>
-							<Button w="150px" variant="outline" onClick={() => props.onLeaveTask(false)} colorScheme="red">
-								Cancel Task
-              				</Button>
+							<Button w="150px" variant="outline" onClick={alertCancelTaskClicked} colorScheme="red">
+								{cancelTaskText}
+							</Button>
 						</AlertDialogBody>
 					</AlertDialogContent>
 				</AlertDialogOverlay>

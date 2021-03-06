@@ -86,8 +86,8 @@ function HabitItem(props: { habitObject: habitObjectType, deleteHabit(x: number)
 	const [newHabitName, setNewHabitName] = useState(description);
 
 	return (
-		<Box d="flex" alignItems="center" bgColor={habitColors[colorIndex]} borderBottomWidth="1px" h="60px" w="600px">
-			<Box pl="30px" w="350px" overflow="scroll" h="100%" d="flex" alignItems="center" borderRightWidth="1px">
+		<Box d="flex" alignItems="center" bgColor={habitColors[colorIndex]} borderBottomWidth="1px" h="60px" w="100%">
+			<Box pl="30px" overflow="hidden" w="350px" h="100%" d="flex" alignItems="center" borderRightWidth="1px">
 				<Text whiteSpace="nowrap">{description}</Text>
 			</Box>
 			<Box w="80px" h="100%" d="flex" alignItems="center" justifyContent="center" borderRightWidth="1px">
@@ -178,7 +178,7 @@ function HabitsContainer(props: { habits: habitObjectType[], deleteHabit(x: numb
 	}
 
 	return (
-		<Box h="500px" d="flex" flexDir="column" alignItems="center" borderRadius="30px" boxShadow="md" borderWidth="1px" overflow="scroll" w="602px">
+		<Box h="500px" overflow="hidden" d="flex" flexDir="column" alignItems="center" borderRadius="30px" boxShadow="md" borderWidth="1px" w="602px">
 			{
 				habits.map((item) => {
 					return <HabitItem deleteHabit={props.deleteHabit} editHabit={props.editHabit} resetHabit={props.resetHabit} key={item.startTime} habitObject={item}></HabitItem>

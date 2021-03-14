@@ -14,6 +14,7 @@ type Item = {
 	timestamp: number,
 	isDone: boolean,
 	isPinned: boolean,
+	lastDone: number,
 }
 
 const colors = [
@@ -75,6 +76,7 @@ function ListItem(props: { item: Item, onDeleteItem(timestamp: number): void, on
 	function setIsDone(isDone: boolean) {
 		let copy = itemCopy();
 		copy.isDone = isDone;
+		copy.lastDone = Date.now();
 		setItem(copy);
 	}
 
@@ -134,8 +136,6 @@ function List(props: { items: Item[], onDeleteItem(timestamp: number): void, onE
 		</Box>
 	)
 }
-
-
 
 function AddItemArea(props: { onAddItem(description: string): void }) {
 
@@ -216,7 +216,7 @@ function Checklist(props: Props) {
 		let newList = [];
 		for (let i = 0; i < temp.length; i++) {
 			curr = temp[i];
-			if (curr.isDone && isNextDay(curr.timestamp)) {
+			if (curr.isDone && isNextDay(curr.lastDone)) {
 				if (curr.isPinned) {
 					curr.isDone = false;
 				}
@@ -247,6 +247,7 @@ function Checklist(props: Props) {
 			isDone: false,
 			timestamp: Date.now(),
 			isPinned: false,
+			lastDone: -1,
 		}
 		let temp = checklistItems.slice();
 		temp.push(newItem);

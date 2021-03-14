@@ -27,10 +27,12 @@ function HabitItem(props: { habitObject: habitObjectType, deleteHabit(x: number)
 		14,
 		21,
 		30,
+		42,
 	]
 
 	// Colors corresponding to day thresholds
 	const habitColors: string[] = [
+		"gray.500",
 		"teal.500",
 		"green.500",
 		"cyan.500",
@@ -297,7 +299,7 @@ function Habits(props: Props) {
 			title: "New habit added.",
 			status: "success",
 			position: "top-right",
-			description: "Day streak will update automatically.",
+			description: "Habits will become more colorful over time.",
 			duration: 7000,
 			isClosable: true,
 		})

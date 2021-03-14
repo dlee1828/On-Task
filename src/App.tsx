@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Box, useColorMode } from '@chakra-ui/react';
+import { Box, Text, useColorMode } from '@chakra-ui/react';
 import WorkSession from './components/WorkSession';
 import MyMenu from './components/MyMenu';
 import { pageType } from './components/pages';
@@ -33,6 +33,75 @@ function App() {
 		localStorage.setItem("page", page);
 	}, [page])
 
+	// Time display
+
+	const [timeString, setTimeString] = useState(getCurrentTimeString());
+	let timer: NodeJS.Timeout;
+	useEffect(() => {
+		timer = setInterval(() => setTimeString(getCurrentTimeString()), 10000);
+		return () => {
+			clearTimeout(timer);
+		}
+	}, [])
+
+	function getCurrentTimeString(): string {
+		let date = new Date();
+		let hours = date.getHours();
+		let minutes = date.getMinutes();
+		let ampm = "AM";
+		if (hours > 12) {
+			hours -= 12;
+			ampm = "PM";
+		}
+		let hoursString = hours.toString();
+		let minutesString = minutes.toString();
+		if (minutesString.length < 2) minutesString = "0" + minutesString;
+		return hoursString + ":" + minutesString + " " + ampm;
+	}
+
+
+	function TimeDisplay() {
+		return (
+			<Box mt="30px" w="170px" d="flex" flexDir="row" pr="30px" justifyContent="flex-end">
+				<Box d="flex" justifyContent="center" w="100px" h="50px" borderWidth="2px" borderRadius="10px" alignItems="center">
+					<Text textAlign="center">{timeString}</Text>
+				</Box>
+			</Box>
+		)
+	}
+
+	// Keybinds
+
+	let prevKey = "";
+	let pageDict: { w: pageType, c: pageType, h: pageType, n: pageType } = {
+		w: "work",
+		c: "checklist",
+		h: "habits",
+		n: "notes",
+	}
+
+	function handleKeyPress(key: KeyboardEvent) {
+		// backslash + letter will navigate to that page
+		let curr = key.key;
+
+		if (prevKey == "\\") {
+			if (pageDict.hasOwnProperty(curr)) {
+				setPage(pageDict[curr as "w" | "c" | "h" | "n"]);
+			}
+		}
+
+		prevKey = curr;
+
+	}
+
+	useEffect(() => {
+		document.addEventListener("keypress", handleKeyPress);
+		return () => document.removeEventListener("keypress", handleKeyPress);
+
+	}, [])
+
+	// Page display
+
 	function displayCorrectPage() {
 		switch (page) {
 			case "work":
@@ -59,7 +128,7 @@ function App() {
 				displayCorrectPage()
 			}
 			{
-				page != "home" ? <Box w="170px"></Box> : null
+				page != "home" ? <TimeDisplay></TimeDisplay> : null
 			}
 		</Box>
 	);

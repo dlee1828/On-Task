@@ -51,10 +51,10 @@ function MyMenu(props: Props) {
 	}
 
 	return (
-		<Box w="170px" mt="25px" h="auto">
-			<IconButton ref={iconNodeRef} ml="25px" onClick={onToggle} aria-label="Menu" icon={displayCorrectIcon()}></IconButton>
+		<Box w="170px" mt="30px" h="auto">
+			<IconButton ref={iconNodeRef} ml="30px" onClick={onToggle} aria-label="Menu" icon={displayCorrectIcon()}></IconButton>
 			<Collapse in={isOpen} animateOpacity>
-				<Box ref={buttonNodeRef} d="flex" flexDir="column" px="25px" pb="25px" w="100%">
+				<Box ref={buttonNodeRef} d="flex" flexDir="column" px="30px" pb="25px" w="100%">
 					{
 						pages.map((item, index) => {
 							return (

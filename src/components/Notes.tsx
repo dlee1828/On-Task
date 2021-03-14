@@ -17,9 +17,15 @@ function Notes(props: Props) {
 		localStorage.setItem("notes", text);
 	}, [text])
 
+	function handleTextEdit(e: any) {
+		if (e.target.value.length <= 10000) {
+			setText(e.target.value);
+		}
+	}
+
 	return (
 		<Box mt="100px">
-			<Textarea value={text} onChange={(e) => setText(e.target.value)} focusBorderColor="orange.300" id="textbox" w="600px" h="400px"></Textarea>
+			<Textarea value={text} onChange={(e) => handleTextEdit(e)} focusBorderColor="orange.300" id="textbox" w="600px" h="400px"></Textarea>
 		</Box>
 	)
 }

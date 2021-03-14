@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Button, Collapse, IconButton, useDisclosure } from '@chakra-ui/react';
 import { CloseIcon, HamburgerIcon, SmallCloseIcon } from '@chakra-ui/icons';
-import { pageType } from '../myTypes';
 import userEvent from '@testing-library/user-event';
+import { pages, pageType, pageColors } from './pages';
 
 interface Props {
 	onSetPage(page: pageType): void;
@@ -36,17 +36,18 @@ function MyMenu(props: Props) {
 		}
 	}, [isOpen])
 
-	// Page names
-	const pages: pageType[] = [
-		"work",
-		"habits",
-	]
-
 	function displayCorrectIcon() {
 		if (isOpen) {
 			return <SmallCloseIcon></SmallCloseIcon>
 		}
 		else return <HamburgerIcon></HamburgerIcon>
+	}
+
+	function handleButtonClick(page: pageType) {
+		props.onSetPage(page);
+		if (isOpen) {
+			onToggle();
+		}
 	}
 
 	return (
@@ -57,7 +58,7 @@ function MyMenu(props: Props) {
 					{
 						pages.map((item, index) => {
 							return (
-								<Button colorScheme="orange" on mt="15px" w="100px" onClick={() => props.onSetPage(item)} key={index}>{item}</Button>
+								<Button colorScheme={pageColors[index]} on mt="15px" w="100px" onClick={() => handleButtonClick(item)} key={index}>{item}</Button>
 							)
 						})
 					}

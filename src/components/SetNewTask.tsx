@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogOverlay, Box, Button, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useColorMode } from '@chakra-ui/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogOverlay, Box, Button, Input, keyframes, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useColorMode } from '@chakra-ui/react';
 import * as utils from "./Utils";
 import InfoContainer from './InfoContainer';
 
@@ -20,7 +20,7 @@ function SetNewTask(props: Props) {
 	let timeDeadline: utils.time;
 
 	// Handling enter key
-	function handleKeyDown(e: any) {
+	function handleEnterKey(e: any) {
 		if (e.key == "Enter") {
 			confirmNewTask();
 		}
@@ -86,9 +86,9 @@ function SetNewTask(props: Props) {
 		<Box d="flex" flexDir="column" alignItems="center">
 			<Popover placement="right" size="" gutter={20} isOpen={popoverIsOpen} onClose={() => setPopoverIsOpen(false)}>
 				<PopoverTrigger>
-					<Box px="50px" py="30px" d="flex" onKeyDown={handleKeyDown} flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="50px">
+					<Box px="50px" py="30px" d="flex" onKeyDown={handleEnterKey} flexDir="column" borderRadius="30px" boxShadow="md" borderWidth="1px" alignItems="center" mt="50px">
 						<Text mb="10px">New Task</Text>
-						<Input mb="20px" placeholder="Clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="purple.500" focusBorderColor="lime" w="300px" value={task}></Input>
+						<Input id="taskInput" mb="20px" placeholder="Clean my room" onChange={(e) => setTask(e.target.value)} isInvalid errorBorderColor="purple.500" focusBorderColor="lime" w="300px" value={task}></Input>
 						<Box d="flex" mb="2px" justifyContent="space-between" alignItems="center" w="300px">
 							<Text w="125px" fontSize="sm" textAlign="center">Finish in (min)</Text>
 							<Text w="125px" fontSize="sm" textAlign="center">Finish by</Text>
@@ -107,7 +107,7 @@ function SetNewTask(props: Props) {
 				</PopoverContent>
 			</Popover>
 			<InfoContainer></InfoContainer>
-			<Button onClick={() => setDialogIsOpen(true)} mt="50px" variant="outline" colorScheme="red">End Work Session</Button>
+			<Button onClick={() => setDialogIsOpen(true)} mt="50px" variant="outline" colorScheme="gray">End Work Session</Button>
 			<AlertDialog isOpen={dialogIsOpen} leastDestructiveRef={cancelRef as any} onClose={() => setDialogIsOpen(false)}>
 				<AlertDialogOverlay>
 					<AlertDialogContent w="300px">

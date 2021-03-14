@@ -170,7 +170,7 @@ function HabitsContainer(props: { habits: habitObjectType[], deleteHabit(x: numb
 	function noHabitsMessage() {
 		if (habits.length == 0) {
 			return (
-				<Text mt="50px">
+				<Text textAlign="center" w="600px" mt="50px">
 					No habits yet...
 				</Text>
 			)
@@ -179,7 +179,7 @@ function HabitsContainer(props: { habits: habitObjectType[], deleteHabit(x: numb
 
 	return (
 		<Box h="500px" overflow="hidden" borderRadius="30px" boxShadow="md" borderWidth="1px" w="602px">
-			<Box h="100%" w="650px" pr="100px" overflowY="scroll" boxSizing="content-box" d="flex" flexDir="column" alignItems="center" borderRadius="30px">
+			<Box h="100%" w="650px" pr="100px" overflowY="scroll" boxSizing="content-box" d="flex" flexDir="column" borderRadius="30px">
 				{
 					habits.map((item) => {
 						return <HabitItem deleteHabit={props.deleteHabit} editHabit={props.editHabit} resetHabit={props.resetHabit} key={item.startTime} habitObject={item}></HabitItem>

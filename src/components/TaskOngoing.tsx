@@ -50,8 +50,8 @@ function TaskOngoing(props: Props) {
 		// Updating timeLeft
 		timeLeft = utils.getTimeLeftUntil(timeDeadline);
 
-		// Time is out if timeLeft = 0 or >= 20 hours
-		if ((timeLeft.hours >= 20) || (timeLeft.hours == 0 && timeLeft.minutes == 0 && timeLeft.seconds == 0)) handleTimeUp();
+		// Time is out if timeLeft = 0 or >= 10 hours
+		if ((timeLeft.hours >= 10) || (timeLeft.hours == 0 && timeLeft.minutes == 0 && timeLeft.seconds == 0)) handleTimeUp();
 
 		setTimeLeftState(timeLeft);
 		setProgressPercent(utils.getProgressPercent(startingTime, timeDeadline))

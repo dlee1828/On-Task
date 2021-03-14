@@ -1,6 +1,9 @@
-# Components Description
+# Components 
 
 **MyMenu**: side menu, present always
+
+Home UI:
+* **Home**: buttons for navigating, no sidebar menu
 
 Work UI:
 * **WorkSession**: displays either "start work session button" or CurrentTask

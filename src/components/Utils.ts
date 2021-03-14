@@ -213,9 +213,20 @@ export function minTime(a: time, b: time) {
 
 const MS_PER_DAY = 86400000;
 
+// Get days since num where num = milliseconds 
 export function getDaysSince(num: number) {
 	const now = Date.now();
 	let diff = now - num;
 	let days = Math.floor(diff / MS_PER_DAY);
 	return days;
+}
+
+// Checks if midnight has passed since given date
+export function isNextDay(ms: number): boolean {
+	// Check if getDay() returns a different value, or if over 1 day has passed
+	let date = new Date(ms);
+	let now = new Date();
+	if (now.getDay() != date.getDay()) return true;
+	else if ((now.getTime() - date.getTime()) / MS_PER_DAY >= 1) return true;
+	return false;
 }

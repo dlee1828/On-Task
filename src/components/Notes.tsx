@@ -10,10 +10,6 @@ function Notes(props: Props) {
 	const [text, setText] = useState(localStorage.getItem("notes") == null ? "" : localStorage.getItem("notes") as string);
 
 	useEffect(() => {
-		document.getElementById("textbox")!.focus();
-	}, [])
-
-	useEffect(() => {
 		localStorage.setItem("notes", text);
 	}, [text])
 

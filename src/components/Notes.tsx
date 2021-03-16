@@ -18,7 +18,8 @@ function Notes(props: Props) {
 	}, [text])
 
 	function handleTextEdit(e: any) {
-		if (e.target.value.length <= 10000) {
+		let text: string = e.target.value;
+		if (text.length <= 10000 && text[text.length - 1] != '\\') {
 			setText(e.target.value);
 		}
 	}

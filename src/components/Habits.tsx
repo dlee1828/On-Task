@@ -299,7 +299,7 @@ function Habits(props: Props) {
 			title: "New habit added.",
 			status: "success",
 			position: "top-right",
-			description: "Habits will become more colorful over time.",
+			description: "Habits become more colorful as their day streak increases.",
 			duration: 7000,
 			isClosable: true,
 		})

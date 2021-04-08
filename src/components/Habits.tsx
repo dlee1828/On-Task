@@ -294,6 +294,7 @@ function Habits(props: Props) {
 		let habitsTemp = habits.slice();
 		habitsTemp.push(newHabit);
 		setHabits(habitsTemp);
+
 		// Toast for added habit
 		habitToast({
 			title: "New habit added.",

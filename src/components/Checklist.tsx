@@ -306,7 +306,7 @@ function Checklist(props: Props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (
-		<Box mt="50px" d="flex" flexFlow="column nowrap" alignItems="center">
+		<Box my="50px" d="flex" flexFlow="column nowrap" alignItems="center">
 			<List items={checklistItems} isMovingItems={isMovingItems} onEditItem={editItem} onMoveItem={moveItem} onDeleteItem={deleteItem}></List>
 			<AddItemArea onAddItem={(description) => addItem(description)}></AddItemArea>
 			<Button mt="20px" variant="outline" colorScheme="blue" onClick={() => setIsMovingItems(!isMovingItems)}>{isMovingItems ? "Done" : "Edit Order"}</Button>

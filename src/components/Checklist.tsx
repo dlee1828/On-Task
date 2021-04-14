@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay, Box, Button, ButtonGroup, Checkbox, Icon, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure, useTabList } from '@chakra-ui/react';
 import { isNextDay } from './Utils';
-import { DeleteIcon, EditIcon, InfoIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon, InfoIcon, TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { AiFillPushpin } from 'react-icons/ai';
 import './Checklist.css';
 
@@ -35,7 +35,7 @@ function randomColor(): string {
 	return colors[i];
 }
 
-function ListItem(props: { item: Item, onDeleteItem(timestamp: number): void, onEditItem(timestamp: number, newItem: Item): void }) {
+function ListItem(props: { item: Item, isMovingItems: boolean, onMoveItem(timestamp: number, up: boolean): void, onDeleteItem(timestamp: number): void, onEditItem(timestamp: number, newItem: Item): void }) {
 
 	// Necessary information: Description, timestamp, and whether is pinned
 	const [item, setItem] = useState(props.item);
@@ -86,8 +86,22 @@ function ListItem(props: { item: Item, onDeleteItem(timestamp: number): void, on
 		setItem(copy);
 	}
 
+	function showMovementButtons() {
+		if (props.isMovingItems) return (
+			<Box d="flex" flexFlow="row nowrap" alignItems="center">
+				<ButtonGroup isAttached mr="25px">
+					<IconButton onClick={() => props.onMoveItem(item.timestamp, true)} aria-label="up" variant="outline" icon={<TriangleUpIcon></TriangleUpIcon>}></IconButton>
+					<IconButton onClick={() => props.onMoveItem(item.timestamp, false)} aria-label="down" variant="outline" icon={<TriangleDownIcon></TriangleDownIcon>}></IconButton>
+				</ButtonGroup>
+			</Box>
+		)
+	}
+
 	return (
 		<Box h="60px" w="100%" d="flex" mb="30px" flexFlow="row nowrap">
+			{
+				showMovementButtons()
+			}
 			<Box className="itemBox" onClick={() => setIsDone(!item.isDone)} borderWidth="2px" borderRadius="25px" borderColor={item.isDone ? doneColor : "auto"} w="450px" h="100%" d="flex" flexDir="column" justifyContent="center" borderRightWidth="2px">
 				<Text mx="15px" fontSize="xl" noOfLines={1}>{item.description}</Text>
 			</Box>
@@ -123,13 +137,13 @@ function ListItem(props: { item: Item, onDeleteItem(timestamp: number): void, on
 	)
 }
 
-function List(props: { items: Item[], onDeleteItem(timestamp: number): void, onEditItem(timestamp: number, newItem: Item): void }) {
+function List(props: { items: Item[], isMovingItems: boolean, onMoveItem(timestamp: number, up: boolean): void, onDeleteItem(timestamp: number): void, onEditItem(timestamp: number, newItem: Item): void }) {
 	return (
 		<Box d="flex" w="650px" flexFlow="column nowrap" alignItems="center">
 			{
 				props.items.map((item, index) => {
 					return (
-						<ListItem onDeleteItem={props.onDeleteItem} onEditItem={props.onEditItem} item={item} key={item.timestamp}></ListItem>
+						<ListItem isMovingItems={props.isMovingItems} onMoveItem={props.onMoveItem} onDeleteItem={props.onDeleteItem} onEditItem={props.onEditItem} item={item} key={item.timestamp}></ListItem>
 					)
 				})
 			}
@@ -201,6 +215,9 @@ function Checklist(props: Props) {
 
 	const [checklistItems, setChecklistItems] = useState(localStorage.getItem("checklistItems") == null ? [] : JSON.parse(localStorage.getItem("checklistItems")!) as Item[]);
 
+	// isMovingItems determines if item order is being edited
+	const [isMovingItems, setIsMovingItems] = useState(false);
+
 	// Store in localstorage whenever checklistItems changes
 	useEffect(() => {
 		localStorage.setItem("checklistItems", JSON.stringify(checklistItems));
@@ -268,13 +285,31 @@ function Checklist(props: Props) {
 		setChecklistItems(temp);
 	}
 
+	function moveItem(timestamp: number, up: boolean) {
+		let index = getItemIndex(timestamp);
+		let temp = checklistItems.slice();
+		let tempItem = JSON.parse(JSON.stringify(checklistItems[index]));
+		if (up) {
+			if (index == 0) return;
+			temp[index] = JSON.parse(JSON.stringify(temp[index - 1]));
+			temp[index - 1] = tempItem;
+		}
+		else {
+			if (index == temp.length - 1) return;
+			temp[index] = JSON.parse(JSON.stringify(temp[index + 1]));
+			temp[index + 1] = tempItem;
+		}
+		setChecklistItems(temp);
+	}
+
 	// Modal dialog
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (
 		<Box mt="50px" d="flex" flexFlow="column nowrap" alignItems="center">
-			<List items={checklistItems} onEditItem={editItem} onDeleteItem={deleteItem}></List>
+			<List items={checklistItems} isMovingItems={isMovingItems} onEditItem={editItem} onMoveItem={moveItem} onDeleteItem={deleteItem}></List>
 			<AddItemArea onAddItem={(description) => addItem(description)}></AddItemArea>
+			<Button mt="20px" variant="outline" colorScheme="blue" onClick={() => setIsMovingItems(!isMovingItems)}>{isMovingItems ? "Done" : "Edit Order"}</Button>
 			<IconButton onClick={() => onOpen()} mt="15px" variant="ghost" aria-label="info" icon={<InfoIcon></InfoIcon>}></IconButton>
 			<Modal isOpen={isOpen} size="lg" onClose={onClose}>
 				<ModalOverlay />

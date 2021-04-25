@@ -180,7 +180,7 @@ function HabitsContainer(props: { habits: habitObjectType[], deleteHabit(x: numb
 	}
 
 	return (
-		<Box h="500px" overflow="hidden" borderRadius="30px" boxShadow="md" borderWidth="1px" w="602px">
+		<Box overflow="hidden" borderRadius="30px" boxShadow="md" borderWidth="1px" w="602px">
 			<Box h="100%" w="650px" pr="100px" overflowY="scroll" boxSizing="content-box" d="flex" flexDir="column" borderRadius="30px">
 				{
 					habits.map((item) => {

@@ -172,7 +172,7 @@ function HabitsContainer(props: { habits: habitObjectType[], deleteHabit(x: numb
 	function noHabitsMessage() {
 		if (habits.length == 0) {
 			return (
-				<Text textAlign="center" w="600px" mt="30x" mb="30px">
+				<Text textAlign="center" w="600px" mt="30px" mb="30px">
 					No habits yet...
 				</Text>
 			)

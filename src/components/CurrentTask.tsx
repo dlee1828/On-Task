@@ -92,6 +92,8 @@ function CurrentTask(props: Props) {
 		setCurrentMode("newTask");
 		setTaskStartingTime(utils.timeZero);
 		setTimeDeadline(utils.timeZero);
+
+		console.log("called\n");
 	}
 
 	// Called when user requests more time for current task

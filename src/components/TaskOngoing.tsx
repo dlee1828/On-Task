@@ -130,7 +130,7 @@ function TaskOngoing(props: Props) {
 				<Input w="150px" d={showingMoreTimeMenu ? "block" : "none"} mb="10px" placeholder={"# minutes"} onChange={(e) => setMoreTimeField(e.target.value)} onKeyDown={handleKeyDown} value={moreTimeField}></Input>
 				<Button variant={buttonVariant} w="150px" d={showingMoreTimeMenu ? "block" : "none"} colorScheme="green" mb="10px" onClick={resetWithMoreTime}>Confirm</Button>
 				<Button variant={buttonVariant} w="150px" d={showingMoreTimeMenu ? "block" : "none"} onClick={() => setShowingMoreTimeMenu(false)} colorScheme="red" mb="10px">Cancel</Button>
-				<Button variant={buttonVariant} w="150px" d={!showingMoreTimeMenu ? "blcok" : "none"} onClick={handleCancelTask} colorScheme="red">Cancel Task</Button>
+				<Button variant={buttonVariant} w="150px" d={!showingMoreTimeMenu ? "block" : "none"} onClick={handleCancelTask} colorScheme="red">Cancel Task</Button>
 			</Box>
 		)
 	}

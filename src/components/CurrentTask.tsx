@@ -14,6 +14,7 @@ function CurrentTask(props: Props) {
 
 	// Storing task variables in localStorage
 	function updateLocalStorage() {
+		console.log("updateLocalStorage called\n");
 		localStorage.setItem("currentMode", currentMode);
 		localStorage.setItem("currentTask", currentTask);
 		localStorage.setItem("taskStartingTime", JSON.stringify(taskStartingTime));
@@ -92,8 +93,6 @@ function CurrentTask(props: Props) {
 		setCurrentMode("newTask");
 		setTaskStartingTime(utils.timeZero);
 		setTimeDeadline(utils.timeZero);
-
-		console.log("called\n");
 	}
 
 	// Called when user requests more time for current task

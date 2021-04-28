@@ -14,7 +14,6 @@ function CurrentTask(props: Props) {
 
 	// Storing task variables in localStorage
 	function updateLocalStorage() {
-		console.log("updateLocalStorage called\n");
 		localStorage.setItem("currentMode", currentMode);
 		localStorage.setItem("currentTask", currentTask);
 		localStorage.setItem("taskStartingTime", JSON.stringify(taskStartingTime));

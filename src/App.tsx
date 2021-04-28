@@ -97,7 +97,6 @@ function App() {
 	useEffect(() => {
 		document.addEventListener("keypress", handleKeyPress);
 		return () => document.removeEventListener("keypress", handleKeyPress);
-
 	}, [])
 
 	// Page display

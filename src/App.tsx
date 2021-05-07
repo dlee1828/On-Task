@@ -91,7 +91,6 @@ function App() {
 		}
 
 		prevKey = curr;
-
 	}
 
 	useEffect(() => {

@@ -156,9 +156,23 @@ function AddItemArea(props: { onAddItem(description: string): void }) {
 	const [addingItem, setAddingItem] = useState(false);
 	const [textInput, setTextInput] = useState("");
 
+	function handleKeyPress(key: KeyboardEvent) {
+		if (key.key == "n") {
+			handleAddItemClicked()
+		}
+	}
+
+	useEffect(() => {
+		document.addEventListener("keypress", handleKeyPress);
+		return () => document.removeEventListener("keypress", handleKeyPress);
+	}, [])
+
 	function handleKeyDown(e: any) {
 		if (e.key == "Enter") {
 			handleAddItem();
+		}
+		else if (e.key == "Escape") {
+			handleCancelInput();
 		}
 	}
 
@@ -171,6 +185,7 @@ function AddItemArea(props: { onAddItem(description: string): void }) {
 			document.getElementById("itemInput")!.focus();
 		}
 	}, [addingItem])
+
 
 	function handleCancelInput() {
 		setTextInput("");

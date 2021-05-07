@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay, Box, Button, ButtonGroup, IconButton, Input, Popover, PopoverArrow, PopoverContent, PopoverTrigger, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import * as utils from './Utils';
 import { CloseIcon, DeleteIcon, EditIcon, RepeatClockIcon, SunIcon } from '@chakra-ui/icons';
+import userEvent from '@testing-library/user-event';
 
 type habitObjectType = {
 	description: string,
@@ -200,6 +201,20 @@ function AddHabitsArea(props: { addHabit(description: string): void }) {
 	const [isAddingHabit, setIsAddingHabit] = useState(false);
 	const [habitDescription, setHabitDescription] = useState("");
 
+	function handleKeyPress(key: KeyboardEvent) {
+		if (key.key == "n") {
+			handleAddHabit();
+			if (!isAddingHabit) {
+				key.preventDefault();
+			}
+		}
+	}
+
+
+	useEffect(() => {
+		document.addEventListener("keypress", handleKeyPress);
+		return () => document.removeEventListener("keypress", handleKeyPress);
+	}, [isAddingHabit])
 
 	function handleAddHabit() {
 		setIsAddingHabit(true);
@@ -207,7 +222,6 @@ function AddHabitsArea(props: { addHabit(description: string): void }) {
 
 	function handleCancelAddHabit() {
 		setIsAddingHabit(false);
-		setHabitDescription("");
 	}
 
 	const [popoverIsOpen, setPopoverIsOpen] = useState(false);
@@ -239,6 +253,9 @@ function AddHabitsArea(props: { addHabit(description: string): void }) {
 		if (e.key == "Enter") {
 			addHabit();
 		}
+		else if (e.key == "Escape") {
+			handleCancelAddHabit();
+		}
 	}
 
 	function displayCorrectElement() {
@@ -248,7 +265,7 @@ function AddHabitsArea(props: { addHabit(description: string): void }) {
 					<Box d="flex" w="300px" flexDir="column" alignItems="start">
 						<Popover returnFocusOnClose={false} isOpen={popoverIsOpen} onClose={() => setPopoverIsOpen(false)} placement="right">
 							<PopoverTrigger>
-								<Input onKeyDown={(e) => handleKeyDown(e)} value={habitDescription} onChange={(e) => setHabitDescription(e.target.value)} placeholder="Go to bed early" w="100%" type="text"></Input>
+								<Input autoFocus onKeyDown={(e) => handleKeyDown(e)} value={habitDescription} onChange={(e) => setHabitDescription(e.target.value)} placeholder="Go to bed early" w="100%" type="text"></Input>
 							</PopoverTrigger>
 							<PopoverContent bgColor="pink.500" ml="5px" px="10px" w="150px" textAlign="center">
 								<PopoverArrow bgColor="pink.500"></PopoverArrow>

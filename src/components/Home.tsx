@@ -33,6 +33,7 @@ function Home(props: Props) {
 							<ListItem>"w" for work</ListItem>
 							<ListItem>"c" for checklist</ListItem>
 							<ListItem>"h" for habits</ListItem>
+							<ListItem>"t" for tallies</ListItem>
 							<ListItem>"n" for notes</ListItem>
 						</UnorderedList>
 					</ModalBody>

@@ -9,6 +9,7 @@ import Habits from './components/Habits';
 import Home from './components/Home';
 import Notes from './components/Notes';
 import Checklist from './components/Checklist';
+import Tallies from './components/Tallies';
 
 function App() {
 
@@ -73,10 +74,11 @@ function App() {
 	// Keybinds
 
 	let prevKey = "";
-	let pageDict: { w: pageType, c: pageType, h: pageType, n: pageType } = {
+	let pageDict: { w: pageType, c: pageType, h: pageType, t: pageType, n: pageType } = {
 		w: "work",
 		c: "checklist",
 		h: "habits",
+		t: "tallies",
 		n: "notes",
 	}
 
@@ -86,7 +88,7 @@ function App() {
 
 		if (prevKey == "\\") {
 			if (pageDict.hasOwnProperty(curr)) {
-				setPage(pageDict[curr as "w" | "c" | "h" | "n"]);
+				setPage(pageDict[curr as "w" | "c" | "h" | "n" | "t"]);
 			}
 		}
 
@@ -110,6 +112,8 @@ function App() {
 				return <Checklist></Checklist>
 			case "notes":
 				return <Notes></Notes>
+			case "tallies":
+				return <Tallies></Tallies>
 			case "home":
 				return <Home onSetPage={setPage}></Home>
 			default:
